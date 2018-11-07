@@ -32,11 +32,10 @@ function getUser (req, res) {
   console.log('get user');
   var accessToken;
   request('https://graph.accountkit.com/v1.3/access_token?grant_type=authorization_code&code='+req.get("authorization-code")+'&access_token=AA|'+sClientID+'|'+sSecret ,
-   async function (error, response, body) {
+   function (error, response, body) {
      var info = JSON.parse(body);
      if (response.body != null){
        accessToken = info.access_token;
-       console.log('access token: ' + info.access_token);
        getModel().create('authentication', info, (err, savedData) => {
            if (err) {
              next(err);
@@ -44,9 +43,17 @@ function getUser (req, res) {
            }
            console.log('put authentication with id: ' + info.id);
          });
-         let userInfo = await getProfileInfo(accessToken);
-         console.log('User info: ' + userInfo);
-         return res.status(200).json(userInfo);
+         request('https://graph.accountkit.com/v1.3/me/?access_token=' + accessToken,
+          function (error, response, body) {
+            let info = JSON.parse(body);
+            if (response.body != null){
+              console.log('put user info id: ' + info.id);
+              return res.status(200).json(info);
+            }
+            else {
+              return info;
+            }
+         });
      }
      else {
        return info;
@@ -54,13 +61,9 @@ function getUser (req, res) {
   });
 }
 
-async function getProfileInfo (accessToken) {
+function getProfileInfo (accessToken) {
   console.log('acess token in variable: ' + accessToken);
-  request('https://graph.accountkit.com/v1.3/me/?access_token=' + accessToken,
-   await function (error, response, body) {
-     console.log('put user info with id: ' + body);
-     return response;
-  });
+
 }
 
 
