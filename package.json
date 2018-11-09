@@ -18,6 +18,7 @@
     "@google-cloud/storage": "^2.2.0",
     "accountkit-server": "^0.45.2",
     "express": "4.16.4",
+    "gstore-node": "^4.3.0",
     "node-accountkit": "^1.1.6",
     "request": "^2.88.0"
   },
