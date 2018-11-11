@@ -1,5 +1,6 @@
 const request = require('request');
 var authentication = require('../models/authentication');
+var user = require('../models/users');
 
 const access_token_url = 'https://graph.accountkit.com/v1.3/access_token?grant_type=authorization_code&code=';
 const account_info_url = 'https://graph.accountkit.com/v1.3/me/?access_token=';
@@ -37,3 +38,8 @@ exports.user_get = function(req, res) {
      }
   });
 };
+
+exports.user_insert = function(req, res) {
+  // user.findOneByUserId(req.params.user_id)
+  user.createUser(req, res);
+}
